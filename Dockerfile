@@ -1,7 +1,12 @@
-FROM node:18-alpine
+FROM maven:3.9-eclipse-temurin-11-alpine AS build
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-EXPOSE 3001
-CMD ["node", "server.js"]
+COPY pom.xml .
+COPY src ./src
+ENV MAVEN_OPTS="--add-opens jdk.compiler/com.sun.tools.javac=ALL-UNNAMED"
+RUN mvn package -DskipTests
+
+FROM eclipse-temurin:11-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
