@@ -2,7 +2,7 @@ name: CI/CD Backend
 
 on:
   push:
-    branches: [ main ]
+    branches: [ develop ]
 
 env:
   REGISTRY: ghcr.io
@@ -40,4 +40,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:main
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:develop
